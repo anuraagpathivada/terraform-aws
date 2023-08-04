@@ -2,6 +2,17 @@
 
 Welcome to our repository dedicated to teaching the essentials of AWS using Terraform! As the cloud continues to be a pivotal point in today's tech industry, mastering AWS services and the power of Infrastructure as Code (IaC) with Terraform can make your journey into cloud computing smoother and more efficient.
 
+## What is Terraform? :hammer_and_wrench:
+
+Terraform, developed by HashiCorp, is an open-source Infrastructure as Code (IaC) tool that allows you to define, provision, and manage cloud infrastructure using a simple, declarative programming language. Instead of manually clicking through the AWS Console or scripting against cloud-specific APIs, with Terraform you describe your complete cloud infrastructure in code, and then just ask Terraform to make it so!
+
+**Why is it powerful?**
+
+- **Declarative Nature**: You describe the desired state of your infrastructure, and Terraform figures out how to create it.
+- **Platform Agnostic**: While we're focusing on AWS here, Terraform supports multiple cloud providers.
+- **Versioning**: Like any code, you can version control your infrastructure, allowing for collaboration, history tracking, and repeatability.
+
+
 ## :books: Topics Covered
 
 - **Networking**: Dive deep into VPCs, Subnets, and AWS networking services.
