@@ -12,7 +12,6 @@ module "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    "Organization_Name" = "${var.org_name}"
-    "Env_type" = "${var.env_type}"
+    "Identifier" = "${var.identifier_tag}"
   }
 }

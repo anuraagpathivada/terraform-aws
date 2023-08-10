@@ -3,13 +3,13 @@
 variable "region" {
   type = string
 }
-variable "env_type" {
+variable "identifier_tag" {
   type = string
 }
+
+# VPC
+
 variable "vpc_name" {
-  type = string
-}
-variable "org_name" {
   type = string
 }
 variable "vpc_cidr" {

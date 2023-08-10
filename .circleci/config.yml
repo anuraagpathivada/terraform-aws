@@ -1,14 +1,39 @@
 version: 2.1
 
+executors:
+  custom-docker-image:
+    docker:
+      - image: anuof90/linuxterraform:latestwithazure
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+          email: $DOCKER_EMAIL
+
 jobs:
-  hello-job:
-    machine:
-      image: ubuntu-2204:2022.07.1
+  create_vpc_aws:
+    executor: custom-docker-image
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - checkout
+      - run:
+          name: Prepare and Execute Terraform Scripts
+          command: |
+            cd Networking/vpc
+            aws configure set aws_access_key_id $S3_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $S3_SECRET_ACCESS_KEY
+            aws configure set region $AWS_REGION
+            export AWS_REGION=$AWS_REGION
+            terraform init
+            terraform validate
+            terraform plan
+            terraform apply -input=false -auto-approve
+      - run:
+          name: Upload terraform state to S3
+          command: |
+            cd scripts
+            aws s3 cp terraform.tfstate s3://$S3_CONFIG_FILE_LOCATION/terraform_vpc.tfstate
 
 workflows:
-  my-workflow:
+  version: 2
+  create_vpc_environment:
     jobs:
-      - hello-job
+      - create_vpc_aws
