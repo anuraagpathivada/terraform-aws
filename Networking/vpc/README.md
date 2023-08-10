@@ -20,11 +20,9 @@ Set up a sophisticated AWS VPC environment with Terraform. This repository provi
 ### 1️⃣ Clone the Repository:
 
 ```bash
-git clone [YOUR_GITHUB_REPO_URL]
-cd [REPO_NAME]
+git clone anuraagpathivada/terraform-aws
+cd anuraagpathivada/terraform-aws
 ```
-
-Replace `[YOUR_GITHUB_REPO_URL]` with your repository's URL and `[REPO_NAME]` with the name of the repository.
 
 ### 2️⃣ Initialize Terraform:
 

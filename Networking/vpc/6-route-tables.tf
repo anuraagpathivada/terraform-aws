@@ -9,7 +9,7 @@ resource "aws_route_table" "public" {
   }
 
   route {
-    ipv6_cidr_block = var.vpc_cidr
+    cidr_block = var.vpc_cidr
     gateway_id = "local"
   }
 
@@ -27,7 +27,7 @@ resource "aws_route_table" "private" {
   }
 
   route {
-    ipv6_cidr_block = var.vpc_cidr
+    cidr_block = var.vpc_cidr
     gateway_id = "local"
   }
 
