@@ -7,7 +7,6 @@ executors:
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
-          email: $DOCKER_EMAIL
 
 jobs:
   create_vpc_aws:
