@@ -17,8 +17,8 @@ jobs:
           name: Prepare and Execute Terraform Scripts
           command: |
             cd Networking/vpc
-            aws configure set aws_access_key_id $S3_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $S3_SECRET_ACCESS_KEY
+            aws configure set aws_access_key_id $AWS_ACCESS_KEYS
+            aws configure set aws_secret_access_key $AWS_SECRET_KEY
             aws configure set region $AWS_REGION
             export AWS_REGION=$AWS_REGION
             terraform init
