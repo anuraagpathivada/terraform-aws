@@ -1,7 +1,6 @@
 # Global
 
 region = "ap-south-1"
-identifier_tag = "Learning - Please Delete"
 
 # VPC
 

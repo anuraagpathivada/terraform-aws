@@ -1,17 +1,9 @@
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.66.0"
+# VPC
 
-  name                 = var.vpc_name
-  cidr                 = var.vpc_cidr
-  azs                  = var.azs
-  private_subnets      = var.private_subnets
-  public_subnets       = var.public_subnets
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
-  enable_dns_hostnames = true
+resource "aws_vpc" "main" {
+  cidr_block       = var.vpc_cidr
 
   tags = {
-    "Identifier" = "${var.identifier_tag}"
+    Name = var.vpc_name
   }
 }

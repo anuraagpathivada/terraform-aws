@@ -3,9 +3,6 @@
 variable "region" {
   type = string
 }
-variable "identifier_tag" {
-  type = string
-}
 
 # VPC
 
