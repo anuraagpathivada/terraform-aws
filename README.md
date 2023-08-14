@@ -35,7 +35,7 @@ Terraform, developed by HashiCorp, is an open-source Infrastructure as Code (IaC
 2. **Install Terraform**: Follow the [official guide](https://learn.hashicorp.com/tutorials/terraform/install-cli) to get Terraform up and running on your machine.
 3. **Clone this Repository**: 
    ```bash
-   git clone [repository-link]
+   git clone anuraagpathivada/terraform-aws
    ```
 
 ## :teacher: How to Use This Repository
