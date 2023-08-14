@@ -1,6 +1,6 @@
 # Terraform AWS VPC Setup 🌐
 
-Set up a sophisticated AWS VPC environment with Terraform. This repository provides all the necessary scripts to get your VPC, along with associated resources like subnets, gateways, and route tables, up and running.
+Set up a simple AWS VPC environment with Terraform. This repository provides all the necessary scripts to get your VPC, along with associated resources like subnets, gateways, and route tables, up and running.
 
 ## 📝 Table of Contents
 
