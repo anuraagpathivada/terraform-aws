@@ -218,28 +218,28 @@ Ever noticed how your home's address doesn't change even if you renovate or chan
 
 An Elastic IP (EIP) is a static, public IPv4 address you can allocate within your AWS account. It's like having a permanent address for your cloud resources, no matter how they evolve or change.
 
-## Why is it called "Elastic"? 🤷
+**Why is it called "Elastic"? 🤷**
 
 The "elastic" nature of the EIP doesn't refer to its flexibility to change (it's static, after all). Instead, it's about how you can easily move and remap the IP address to other instances in your account. Think of it like a mobile phone number that you can transfer between devices.
 
-## Why would I need an EIP? 🧐
+**Why would I need an EIP? 🧐**
 
 1. **Stable Websites & Apps**: Running a website? You don't want your domain's IP address to change, causing accessibility issues.
 2. **Quick Recovery**: If an EC2 instance fails, remap the EIP to another instance for quick recovery.
 3. **Strict Access Control**: For situations where you whitelist IP addresses (like secured databases or third-party services), a consistent IP address saves time and avoids access issues.
 
-## Got it! But are there limitations? 🚧
+**Got it! But are there limitations? 🚧**
 
 Yes!
 
 1. **Limited Numbers**: AWS doesn't offer unlimited EIPs. IPv4 addresses are limited globally.
 2. **Costs Involved**: While the allocation might be free, there's a charge if it's not associated with a running instance. Think of it as a "storage fee" for keeping that IP reserved for you.
 
-## Real-world Analogy 🌍
+** Real-world Analogy 🌍**
 
 Imagine phone numbers. Moving to a new city might get you a new local number. But what if you're a business? You'd prefer a permanent number, right? Even if you shift your office, you can retain that "business" number. That's your EIP in this analogy.
 
-## How does it tie back to AWS networking? 🕸
+**How does it tie back to AWS networking? 🕸**
 
 - **Internet Gateway**: For an EC2 instance with an EIP to talk to the internet, your VPC should be equipped with an Internet Gateway.
   
