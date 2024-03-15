@@ -1,4 +1,3 @@
-
 resource "aws_key_pair" "bastionpublickey" {
   key_name   = "${var.vpc_name}-key"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaCr/qNpj2oER4x+eV2M+/OUwp+qreJrGyEhlKukr5YMSDp53MSwzTnZuLkciXFwI+T0LECw1qZl/HX5bOG+tBuVotdLaYI334lp/kO6KVOOPMojuixQgXm5ZGHq4b5OxR5x+axjxTsi+eB8AaIGBxCrZUa0YJK9RzcxV5fvYmoqyeiraEbCjJBbAyOMetz6SrsvWgg99AtLgC8JhQUlHvf3rqCSu10GZHAPKJOUsYARNX0/2BTFukR3MBbKHhvzZN55t8Mp5A2FXuIrR8ioUB3DSJrBcCQ8MCPGq3hfoWCtTpc1fwKckfOz3fiOYfwA9PX/Qyhw9C6E0S4nvPWVbN"
@@ -17,7 +16,31 @@ resource "aws_launch_template" "demo" {
               #!/bin/bash
               # Install Node.js for React app
               curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
-              sudo yum install -y nodejs nginx
+              sudo yum install -y nodejs git
+              sudo amazon-linux-extras install nginx1 -y
+
+              # Get Git credentials from  file
+              git config --global credential.helper '!echo "username=${var.git_username}\npassword=${var.git_password}"'
+
+              # Clone the GitHub repository containing the React app
+              git clone https://github.com/anuraagpathivada/terraform-aws.git /tmp/terraform-aws
+              sudo chown -R ec2-user:ec2-user /tmp/terraform-aws
+
+              # Copy React app files to appropriate location
+              sudo mkdir -p /var/www/html
+              sudo cp -r /tmp/terraform-aws/Apps/frontend/practice-sample/* /var/www/html/
+              sudo chown -R ec2-user:ec2-user /var/www/html
+
+              # Install dependencies and build the React app
+              cd /var/www/html
+              npm install
+              npm run build
+
+              # Configure Nginx to serve React app
+              sudo rm -f /etc/nginx/nginx.conf  # Remove default nginx config
+              sudo cp /tmp/terraform-aws/Apps/frontend/nginx.conf /etc/nginx/nginx.conf  
+              sudo systemctl enable nginx
+              sudo systemctl restart nginx
 
               # Install Python and Flask for Flask app
               sudo yum install -y python3 python3-pip
@@ -51,6 +74,7 @@ resource "aws_autoscaling_group" "demo" {
   max_size                  = 2
   desired_capacity          = 1
   vpc_zone_identifier       = module.vpc.private_subnets
+  target_group_arns         = [aws_lb_target_group.example.arn]
   tag {
     key                 = "Env_type"
     value               = "${var.env_type}"
@@ -91,3 +115,48 @@ resource "aws_autoscaling_group" "demo" {
  }
 
 
+# Load Balancer
+
+resource "aws_lb" "example" {
+  name               = "${var.vpc_name}-lb"
+  load_balancer_type = "application"
+  subnets            = module.vpc.public_subnets
+  security_groups    = [aws_security_group.allow_lb_traffic.id]
+
+  tags = {
+    Name = "${var.vpc_name}-lb"
+    "Env_type" = "${var.env_type}"
+  }
+}
+
+# Target Group 
+
+resource "aws_lb_target_group" "example" {
+  name     = "${var.vpc_name}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = module.vpc.vpc_id
+
+  health_check {
+    path = "/"
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-tg"
+    "Env_type" = "${var.env_type}"
+  }
+}
+
+
+# Listener
+
+resource "aws_lb_listener" "example" {
+  load_balancer_arn = aws_lb.example.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.example.arn
+  }
+}

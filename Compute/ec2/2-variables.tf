@@ -37,4 +37,9 @@ variable "ec2_instance_type" {
 variable "bastionopenssh" {
   type = string
 }
-
+variable "git_username" {
+  type = string
+}
+variable "git_password" {
+  type = string
+}

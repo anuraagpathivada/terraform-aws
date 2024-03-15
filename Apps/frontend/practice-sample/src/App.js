@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [message1, setMessage1] = useState('');
+  const [message2, setMessage2] = useState('');
+
+  const handleClick1 = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/hello');
+      setMessage1(response.data.message);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessage1('Failed to fetch message from API 1');
+    }
+  };
+
+  const handleClick2 = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/world');
+      setMessage2(response.data.message);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessage2('Failed to fetch message from API 2');
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>React App</h1>
+      <button onClick={handleClick1}>Say Hello</button>
+      <p>{message1}</p>
+      <button onClick={handleClick2}>Say World</button>
+      <p>{message2}</p>
     </div>
   );
 }
