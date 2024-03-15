@@ -2,6 +2,19 @@
 
 Networking can seem like an enigma, especially with all the technical terms and configurations to consider. Let's unravel this mystery together.
 
+Before we learn more about Networking, lets first understand what is cloud computing, why has it become popular, and then what are the different types of cloud infrastructure we have currently (obviously because we will concentrate our learning on cloud).
+
+Imagine you have a library at home, and have a good number of books. You can access these books anytime you like and no one else from outside your home can access them unless you give it to them. Basically it is secure and its yours. You would have to maintain these books, shelves, clean them, ensure they are stored properly. It is your responsible to keep them in that way. Now imagine a huge public library where you can access any book without the trouble of maintaining and storing them at your home. You can go there anytime, get what you need and then return once you are done with it.
+**Cloud computing** is like this huge public library. Instead of setting up and maintaining your own servers and data centeres, you use the resources provided by the public cloud provider over the internet.
+
+Lets continue with the same analogy , as to understand why there is more interest to move infrastructure to cloud. Suppose we need to expand our library may be add a few 100 books and then ocassionally you need some books which you would use only for a few days or months. Expanding the home library is going to be expensive, incurs more maintenance and could also be time consuming. However, in a the public library, you could access any or all resources on demand. **Cloud Infrastructure** offers similar benefits: **scalability**(get more resources as needed), **cost efficient**(pay only for what you use), **accessibilty**(access the resources from anywhere) and **reduced maintenance**(no need to maintin the physical hardware
+
+## Different Types of Cloud Infrastructure
+
+1. **Public Cloud:** Like a public library, resources are owned and operated by a cloud provider and shared across different organizations.
+2. **Private Cloud:** Like having a section of a library exclusively for you with all the benefits but with privacy and control.
+3. **Hybrid Cloud:** Combining your home library with access to the public library. You keep some resources privately, and use public cloud for others.) 
+
 ## 📝 Table of Contents
 
 1. [Introduction to Networking](#introduction-to-networking)
@@ -34,41 +47,54 @@ Imagine two friends wanting to share their diaries. Initially, they might have m
 
 **What's the OSI Model, and why should we care?**
 
-The OSI Model is like a seven-layered cake, each layer adding its unique flavor. It breaks down the mammoth task of networking into digestible chunks, letting us focus on one aspect at a time.
+The OSI (Open Systems Interconnection) model is a conceptual framework used to understand and organize the complex world of network communications. It's like a multi-story building, with each floor representing a different aspect of networking. Each of these floors, or layers, has a specific role in how data is transmitted from one computer to another over a network.
+Understanding the OSI model is crucial because it helps us break down the networking process into manageable parts. 
 
-**Can you walk me through these layers?**
+**Lets dive deeper into the individual layers**
 
-Of course, let's dive in:
+Consider an example where you are purchasing a product from amazon.com
 
-**Physical Layer:** Imagine this as the physical roads in our city analogy. It deals with actual tangible connections - be it optical fibers, cables, or wireless radio waves. Without this, no actual data movement occurs.
+**Physical Layer:** 
+This is like the physical infrastructure of Amazon – the warehouses, delivery trucks, and the physical route the trucks take.
+In terms of the AWS components, this includes the physical infrastructure of AWS, such as global data centers, servers, network cables, and routers.
 
-**Data Link Layer:** Ever wondered how traffic lights work? They ensure cars don't collide. Similarly, this layer establishes a secure link between two direct points, ensuring data packets don't clash.
+**Data Link Layer:** 
+Think of this layer as the process of packing your Amazon order. The product is placed in a box, labeled correctly, and prepared for shipping in the warehouse.
+In terms of the AWS components, AWS Direct Connect links your on-premises network to AWS over a dedicated network connection.
 
-**Network Layer:** If our city was global, this would be the international flight routes. It determines the best route for data to reach its destination across a maze of networks.
+**Network Layer:** 
+This is akin to setting the shipping address for your package and choosing the shipping method. It determines how your package will travel from the warehouse to your home.
+In terms of the AWS components, Amazon VPC (Virtual Private Cloud) for network layer control, including IP addressing, routing tables, and subnets. Amazon Route 53 for DNS services.
 
-**Transport Layer:** This ensures data integrity. Let's say you're transporting a fragile item. You'd ensure it's packaged well and reaches without damage. Similarly, this layer ensures data reaches end-to-end without errors and in the correct order.
+**Transport Layer:** 
+This layer ensures that your package arrives in good condition and notifies you of its progress. If you order multiple items, this layer makes sure they all arrive, even if they're shipped separately.
+In terms of the AWS components, Elastic Load Balancing distributes incoming application traffic across multiple targets. It operates at the request level (Layer 7) and connection level (Layer 4).
 
-**Session Layer:** Imagine renting a conference room for a meeting. You'd want it for a specific time, and once done, you'd leave. This layer establishes, maintains, and terminates connections (sessions) like our room booking.
+**Session Layer:** 
+Imagine this as managing your shopping session. It keeps track of what's in your cart as you shop and ensures that your session remains active until you check out.
+AWS establishes and manages sessions with its management console and APIs when you interact with services.
 
-**Presentation Layer:** Consider two people from different countries, speaking different languages, using a translator to communicate. This layer translates data formats to ensure both sender and receiver understand the data.
+**Presentation Layer:** 
+This is like the way Amazon displays products in a format you can understand. It translates product details into a language and currency you're familiar with.
+In terms of the AWS components, services like API Gateway and Lambda can manipulate data into the correct format for the application or user, including data encryption and decryption.
 
-**Application Layer:** Let's say you want to send a letter. You'd choose a postal service. Similarly, this is where the actual communication begins. It involves protocols (set methods of communication) like HTTP (used for websites) or FTP (for file transfers).
-
-**Wait, what's a protocol? And while we're at it, what's an application?**
-
-Great questions! A protocol is like a set of rules. Just as we have etiquettes for a formal dinner, in the world of networking, protocols define how data should be sent, received, and interpreted.
-
-An application, in this context, isn't your mobile game. It refers to any tool or software that communicates over a network. Your web browser, for instance, is an application that follows the HTTP/HTTPS protocol to fetch web pages from the internet.
+**Application Layer:** 
+This is the Amazon website interface – the part you interact with. It's where you choose products, read reviews, and place your order.
+In terms of the AWS components, Amazon S3 for storing website assets, Amazon EC2 for running web server instances, and Amazon RDS for database services. Services like AWS Elastic Beanstalk for deploying applications.
 
 ---
 
-## Diving into AWS Networking
+## AWS Networking Basics
 
 ### Virtual Private Cloud (VPC)
 
 **What's a VPC?**
 
-It's like your own private section of the AWS Cloud, where you can launch resources in a virtual network. Think of it as your own personal gated community within the vast city of AWS.
+Think of a gated community within a large city. The city is the public cloud – a space where many people and businesses reside, sharing the infrastructure. A gated community (VPC) within this city is a space that’s just for you. You have control over the houses, who enters or leaves, and how things are set up within this community. In AWS, a VPC gives you a private space within their public cloud. You control the network environment, including IP address ranges, subnets, and network gateways.
+
+**Why do we need it ?**
+
+For privacy, security, and control. In a VPC, you control the network environment, ensuring that your applications and data are isolated from others. It's like having a private piece of the cloud where you can define your own security and networking settings, just as you would set rules and boundaries in your gated community.
 
 ---
 
@@ -80,7 +106,7 @@ Imagine you've built a mansion with numerous rooms. Each room serves a purpose �
 
 **Okay, but why have private and public subnets?**
 
-Visualize the mansion again. You'd probably want some rooms, like your bedroom, to be private, right? Yet, you'd want your main hall to be accessible to guests. Similarly:
+Visualize the mansion again. You'd probably want some rooms, like your bedroom, to be private, right? Yet, you'd want your main hall to be accessible to guests.
 
 - **Private Subnets**: These are the 'bedrooms.' Resources in private subnets, like databases, aren't directly accessible from the public internet. They're shielded, adding a layer of security.
 
