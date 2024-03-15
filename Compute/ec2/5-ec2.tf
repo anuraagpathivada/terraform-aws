@@ -17,7 +17,7 @@ resource "aws_launch_template" "demo" {
               #!/bin/bash
               # Install Node.js for React app
               curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
-              sudo yum install -y nodejs
+              sudo yum install -y nodejs nginx
 
               # Install Python and Flask for Flask app
               sudo yum install -y python3 python3-pip
