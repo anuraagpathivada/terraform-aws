@@ -5,7 +5,7 @@ resource "aws_key_pair" "bastionpublickey" {
 
 # Launch Template
 
-resource "aws_launch_template" "demo" {
+resource "aws_launch_template" "webapp" {
   name_prefix   = "${var.vpc_name}-"
   depends_on = [ aws_key_pair.bastionpublickey ]
   image_id      = var.ec2_image
@@ -63,17 +63,17 @@ resource "aws_launch_template" "demo" {
 
 # Auto Scaling Group
 
-resource "aws_autoscaling_group" "demo" {
+resource "aws_autoscaling_group" "webapp" {
   name                      = "${var.vpc_name}-asg"
   launch_template {
-    id      = aws_launch_template.demo.id
+    id      = aws_launch_template.webapp.id
     version = "$Latest"
   }
   min_size                  = 1
   max_size                  = 2
   desired_capacity          = 1
   vpc_zone_identifier       = module.vpc.private_subnets
-  target_group_arns         = [aws_lb_target_group.example.arn]
+  target_group_arns         = [aws_lb_target_group.webapp.arn]
   tag {
     key                 = "Env_type"
     value               = "${var.env_type}"
@@ -116,7 +116,7 @@ resource "aws_autoscaling_group" "demo" {
 
 # Load Balancer
 
-resource "aws_lb" "example" {
+resource "aws_lb" "webapp" {
   name               = "${var.vpc_name}-lb"
   load_balancer_type = "application"
   subnets            = module.vpc.public_subnets
@@ -130,7 +130,7 @@ resource "aws_lb" "example" {
 
 # Target Group 
 
-resource "aws_lb_target_group" "example" {
+resource "aws_lb_target_group" "webapp" {
   name     = "${var.vpc_name}-tg"
   port     = 80
   protocol = "HTTP"
@@ -149,13 +149,13 @@ resource "aws_lb_target_group" "example" {
 
 # Listener
 
-resource "aws_lb_listener" "example" {
-  load_balancer_arn = aws_lb.example.arn
+resource "aws_lb_listener" "webapp" {
+  load_balancer_arn = aws_lb.webapp.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.example.arn
+    target_group_arn = aws_lb_target_group.webapp.arn
   }
 }
