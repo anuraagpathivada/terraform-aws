@@ -34,7 +34,11 @@ resource "aws_launch_template" "demo" {
               # Install dependencies and build the React app
               cd /var/www/html
               npm install
+              sudo chown -R ec2-user:ec2-user /var/www/html
+              npm install axios
+              sudo chown -R ec2-user:ec2-user /var/www/html
               npm run build
+              sudo chown -R ec2-user:ec2-user /var/www/html
 
               # Configure Nginx to serve React app
               sudo rm -f /etc/nginx/nginx.conf  # Remove default nginx config
@@ -42,11 +46,6 @@ resource "aws_launch_template" "demo" {
               sudo systemctl enable nginx
               sudo systemctl restart nginx
 
-              # Install Python and Flask for Flask app
-              sudo yum install -y python3 python3-pip
-              pip3 install flask flask-cors
-
-              # Add any additional commands to set up your applications here
               EOF
               )
   key_name = aws_key_pair.bastionpublickey.key_name
