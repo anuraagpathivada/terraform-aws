@@ -76,6 +76,14 @@ resource "aws_security_group" "allow_internet_alb_traffic" {
   }
 }
 
+resource "aws_vpc_security_group_ingress_rule" "allow_HTTP_redirection" {
+  security_group_id = aws_security_group.allow_internet_alb_traffic.id
+  cidr_ipv4         = ["0.0.0.0/0"]
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
+}
+
 resource "aws_security_group" "allow_alb_backend_traffic" {
   name        = "${var.vpc_name}-backend-sg"
   description = "Traffic from ALB to backend instances"

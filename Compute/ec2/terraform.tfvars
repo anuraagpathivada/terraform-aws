@@ -21,4 +21,8 @@ git_password = ""
 
 # Certificates
 
+certificate_arn = ""
+
+# Route 53
+
 domain_name = "a2suite.co.uk"

@@ -46,6 +46,12 @@ variable "git_password" {
 
 # Certificates
 
+variable "certificate_arn" {
+  type = string
+}
+
+# Route 53
+
 variable "domain_name" {
   type = string
 }
