@@ -43,3 +43,9 @@ variable "git_username" {
 variable "git_password" {
   type = string
 }
+
+# Certificates
+
+variable "domain_name" {
+  type = string
+}

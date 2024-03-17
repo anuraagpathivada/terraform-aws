@@ -7,7 +7,7 @@ function App() {
 
   const handleClick1 = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/hello');
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/hello`);
       setMessage1(response.data.message);
     } catch (error) {
       console.error('Error:', error);
@@ -17,7 +17,7 @@ function App() {
 
   const handleClick2 = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/world');
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/world`);
       setMessage2(response.data.message);
     } catch (error) {
       console.error('Error:', error);

@@ -18,3 +18,7 @@ ec2_instance_type = "t2.micro"
 bastionopenssh = "bastionopenssh.pem"
 git_username = "anuraagpathivada"
 git_password = ""
+
+# Certificates
+
+domain_name = "a2suite.co.uk"
