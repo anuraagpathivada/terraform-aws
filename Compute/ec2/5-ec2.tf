@@ -63,7 +63,7 @@ resource "aws_launch_template" "webapp" {
 
               # Copy React app files to appropriate location
               sudo mkdir -p /var/www/html
-              sudo cp -r /tmp/terraform-aws/Apps/frontend/practice-sample/* /var/www/html/
+              sudo cp -r /tmp/terraform-aws/Apps/Client-Side-Rendering/frontend/practice-sample/* /var/www/html/
               sudo chown -R ec2-user:ec2-user /var/www/html
 
               # Install dependencies and build the React app
@@ -140,7 +140,7 @@ resource "aws_launch_template" "backend" {
 
               # Copy Backend app files to appropriate location
 
-              sudo cp -r /tmp/terraform-aws/Apps/backend/* /home/ec2-user/
+              sudo cp -r /tmp/terraform-aws/Apps/Client-Side-Rendering/backend/* /home/ec2-user/
               sudo chown -R ec2-user:ec2-user /home/ec2-user/*
 
               python3 /home/ec2-user/app.py
