@@ -78,7 +78,7 @@ resource "aws_security_group" "allow_internet_alb_traffic" {
 
 resource "aws_vpc_security_group_ingress_rule" "allow_HTTP_redirection" {
   security_group_id = aws_security_group.allow_internet_alb_traffic.id
-  cidr_ipv4         = ["0.0.0.0/0"]
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 80
   ip_protocol       = "tcp"
   to_port           = 80
@@ -92,6 +92,31 @@ resource "aws_security_group" "allow_alb_backend_traffic" {
   ingress {
     from_port       = 5000
     to_port         = 5000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.allow_internet_alb_traffic.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name     = "${var.vpc_name}-backend-sg"
+    "Env_type" = "${var.env_type}"
+  }
+}
+
+resource "aws_security_group" "allow_alb_frontend_traffic" {
+  name        = "${var.vpc_name}-frontend-sg"
+  description = "Traffic from ALB to Frontend instances"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.allow_internet_alb_traffic.id]
   }

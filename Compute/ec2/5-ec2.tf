@@ -45,7 +45,7 @@ resource "aws_launch_template" "webapp" {
   depends_on = [ aws_key_pair.bastionpublickey ]
   image_id      = var.ec2_image
   instance_type = var.ec2_instance_type
-  vpc_security_group_ids = ["${aws_security_group.allow_internet_alb_traffic.id}", "${aws_security_group.allow_bastion_ec2_ssh_traffic.id}"]
+  vpc_security_group_ids = ["${aws_security_group.allow_alb_frontend_traffic.id}", "${aws_security_group.allow_bastion_ec2_ssh_traffic.id}"]
   # User data script to install required binaries
   user_data = base64encode(<<-EOF
               #!/bin/bash
@@ -64,6 +64,7 @@ resource "aws_launch_template" "webapp" {
               # Copy React app files to appropriate location
               sudo mkdir -p /var/www/html
               sudo cp -r /tmp/terraform-aws/Apps/Client-Side-Rendering/frontend/practice-sample/* /var/www/html/
+              sudo cp /tmp/terraform-aws/Apps/Client-Side-Rendering/frontend/practice-sample/.env /var/www/html/
               sudo chown -R ec2-user:ec2-user /var/www/html
 
               # Install dependencies and build the React app
@@ -77,7 +78,7 @@ resource "aws_launch_template" "webapp" {
 
               # Configure Nginx to serve React app
               sudo rm -f /etc/nginx/nginx.conf  # Remove default nginx config
-              sudo cp /tmp/terraform-aws/Apps/frontend/nginx.conf /etc/nginx/nginx.conf  
+              sudo cp /tmp/terraform-aws/Apps/Client-Side-Rendering/frontend/nginx.conf /etc/nginx/nginx.conf  
               sudo systemctl enable nginx
               sudo systemctl restart nginx
 
@@ -255,7 +256,7 @@ resource "aws_lb_listener" "https_front_listener" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = ""
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
