@@ -34,6 +34,8 @@ module "eks" {
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
 
+  enable_cluster_creator_admin_permissions = true
+
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -46,9 +48,18 @@ module "eks" {
     }
   }
 
+  eks_managed_node_groups = {
+    default = {
+      min_size     = 1
+      max_size     = 2
+      desired_size = 1
+      instance_types = ["t2.micro"]
+    }
+  }
+
   vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets
-  control_plane_subnet_ids = module.vpc.public_subnets
+  control_plane_subnet_ids = module.vpc.intra_subnets
 
   access_entries = {
     # One access entry with a policy associated
@@ -67,6 +78,29 @@ module "eks" {
     }
   }
 
+  # Karpentar Config
+
+  node_security_group_tags = {
+    "karpenter.sh/discovery" = "${var.vpc_name}-eks"
+  }
+
+
+  tags = {
+    Name     = "${var.vpc_name}-eks"
+    "Env_type" = "${var.env_type}"
+  }
+}
+
+# Karpenter
+
+module "karpenter" {
+  source = "terraform-aws-modules/eks/aws//modules/karpenter"
+  cluster_name = module.eks.cluster_name
+  enable_irsa          = true
+  irsa_oidc_provider_arn     = module.eks.oidc_provider_arn
+  node_iam_role_additional_policies = {
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  }
   tags = {
     Name     = "${var.vpc_name}-eks"
     "Env_type" = "${var.env_type}"
