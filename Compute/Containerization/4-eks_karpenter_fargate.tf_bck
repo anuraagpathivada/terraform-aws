@@ -1,0 +1,241 @@
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
+  cluster_name    = "${var.vpc_name}-eks"
+  cluster_version = "1.29"
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+  
+  cluster_addons = {
+    coredns = {
+      configuration_values = jsonencode({
+        computeType = "Fargate"
+        resources = {
+          limits = {
+            cpu = "0.25"
+            memory = "256M"
+          }
+          requests = {
+            cpu = "0.25"
+            memory = "256M"
+          }
+        }
+      })
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+
+  enable_cluster_creator_admin_permissions = true
+  vpc_id                   = module.vpc.vpc_id
+  subnet_ids               = module.vpc.private_subnets
+  control_plane_subnet_ids = module.vpc.intra_subnets
+
+# Fargate profiles use the cluster primary security group so these are not utilized
+  create_cluster_security_group = false
+  create_node_security_group    = false
+
+  fargate_profiles = {
+    karpenter = {
+      selectors = [
+        { namespace = "karpenter" }
+      ]
+    }
+    kube-system = {
+      selectors = [
+        { namespace = "kube-system" }
+      ]
+    }
+  }
+  tags = {
+    Name     = "${var.vpc_name}-eks"
+    "Env_type" = "${var.env_type}"
+    "karpenter.sh/discovery" = "${var.vpc_name}-eks"
+  }
+}
+
+# Karpenter
+
+module "karpenter" {
+  source = "terraform-aws-modules/eks/aws//modules/karpenter"
+
+  cluster_name = module.eks.cluster_name
+
+  enable_irsa            = true
+  irsa_oidc_provider_arn = module.eks.oidc_provider_arn
+
+  node_iam_role_additional_policies = {
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  }
+
+  tags = {
+    Environment = "dev"
+    Terraform   = "true"
+  }
+}
+
+module "karpenter_disabled" {
+  source = "terraform-aws-modules/eks/aws//modules/karpenter"
+
+  create = false
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      # This requires the awscli to be installed locally where Terraform is executed
+      args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    }
+  }
+}
+
+provider "kubectl" {
+  apply_retry_count      = 5
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  load_config_file       = false
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
+data "aws_availability_zones" "available" {}
+data "aws_ecrpublic_authorization_token" "token" {
+  provider = aws.virginia
+}
+
+resource "helm_release" "karpenter" {
+  namespace           = "karpenter"
+  create_namespace    = true
+  name                = "karpenter"
+  repository          = "oci://public.ecr.aws/karpenter"
+  repository_username = data.aws_ecrpublic_authorization_token.token.user_name
+  repository_password = data.aws_ecrpublic_authorization_token.token.password
+  chart               = "karpenter"
+  version             = "0.35.1"
+  wait                = false
+
+  values = [
+    <<-EOT
+    settings:
+      clusterName: ${module.eks.cluster_name}
+      clusterEndpoint: ${module.eks.cluster_endpoint}
+      interruptionQueue: ${module.karpenter.queue_name}
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: ${module.karpenter.iam_role_arn}
+    tolerations:
+      - key: 'eks.amazonaws.com/compute-type'
+        operator: Equal
+        value: fargate
+        effect: "NoSchedule"
+    EOT
+  ]
+}
+
+
+resource "kubectl_manifest" "karpenter_node_class" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.k8s.aws/v1beta1
+    kind: EC2NodeClass
+    metadata:
+      name: default
+    spec:
+      amiFamily: AL2
+      role: ${module.karpenter.node_iam_role_name}
+      subnetSelectorTerms:
+        - tags:
+            karpenter.sh/discovery: ${module.eks.cluster_name}
+      securityGroupSelectorTerms:
+        - tags:
+            karpenter.sh/discovery: ${module.eks.cluster_name}
+      tags:
+        karpenter.sh/discovery: ${module.eks.cluster_name}
+  YAML
+
+  depends_on = [
+    helm_release.karpenter
+  ]
+}
+
+resource "kubectl_manifest" "karpenter_node_pool" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1beta1
+    kind: NodePool
+    metadata:
+      name: default
+    spec:
+      template:
+        spec:
+          nodeClassRef:
+            name: default
+          requirements:
+            - key: "karpenter.k8s.aws/instance-category"
+              operator: In
+              values: ["t","c", "m", "r"]
+            - key: "karpenter.k8s.aws/instance-cpu"
+              operator: In
+              values: ["1","2","4", "8", "16", "32"]
+            - key: "karpenter.k8s.aws/instance-hypervisor"
+              operator: In
+              values: ["nitro"]
+            - key: "karpenter.k8s.aws/instance-generation"
+              operator: Gt
+              values: ["2"]
+      limits:
+        cpu: 1000
+      disruption:
+        consolidationPolicy: WhenEmpty
+        consolidateAfter: 30s
+  YAML
+
+  depends_on = [
+    kubectl_manifest.karpenter_node_class
+  ]
+}
+
+resource "kubectl_manifest" "karpenter_manage_clusterrole" {
+  yaml_body = <<-YAML
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: karpenter-manage
+    rules:
+    - apiGroups: ["karpenter.sh"]
+      resources: ["nodepools"]
+      verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
+  YAML
+  depends_on = [kubectl_manifest.karpenter_node_class]
+}
+
+resource "kubectl_manifest" "karpenter_manage_clusterrolebinding" {
+  yaml_body = <<-YAML
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: karpenter-manage-binding
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: karpenter-manage
+    subjects:
+    - kind: User
+      name: "arn:aws:iam::023408401842:user/Anuraag"
+      apiGroup: rbac.authorization.k8s.io
+  YAML
+
+  depends_on = [kubectl_manifest.karpenter_manage_clusterrole]
+}
