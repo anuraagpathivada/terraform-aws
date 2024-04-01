@@ -12,6 +12,7 @@ module "vpc" {
 
   tags = {
     "Env_type" = "${var.env_type}"
+    "Terraform" = "true" 
   }
 
     public_subnet_tags = {

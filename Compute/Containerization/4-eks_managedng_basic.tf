@@ -20,7 +20,8 @@ module "eks" {
 
   vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets
-  control_plane_subnet_ids = module.vpc.public_subnets
+  control_plane_subnet_ids = module.vpc.intra_subnets
+  enable_cluster_creator_admin_permissions = true
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
@@ -32,35 +33,13 @@ module "eks" {
       min_size     = 1
       max_size     = 2
       desired_size = 1
-      instance_types = ["t2.micro"]
+      instance_types = ["t2.small"]
     }
     backend = {
       min_size     = 1
       max_size     = 2
       desired_size = 1
-    }
-    al2023_nodeadm = {
-      ami_type = "AL2023_x86_64_STANDARD"
-      platform = "al2023"
-
-      use_latest_ami_release_version = true
-
-      cloudinit_pre_nodeadm = [
-        {
-          content_type = "application/node.eks.aws"
-          content      = <<-EOT
-            ---
-            apiVersion: node.eks.aws/v1alpha
-            kind: NodeConfig
-            spec:
-              kubelet:
-                config:
-                  shutdownGracePeriod: 30s
-                  featureGates:
-                    DisableKubeletCloudCredentialProviders: true
-          EOT
-        }
-      ]
+      instance_types = ["t2.small"]
     }
   }
 
@@ -84,5 +63,34 @@ module "eks" {
   tags = {
     Name     = "${var.vpc_name}-eks"
     "Env_type" = "${var.env_type}"
+    "Terraform" = "true" 
+  }
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      # This requires the awscli to be installed locally where Terraform is executed
+      args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    }
+  }
+}
+
+provider "kubectl" {
+  apply_retry_count      = 5
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  load_config_file       = false
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
   }
 }

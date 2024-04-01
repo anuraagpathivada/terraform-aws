@@ -1,3 +1,5 @@
+# EKS IAM Role
+
 resource "aws_iam_role" "accesstocluster" {
   for_each = toset(["single"])
 
@@ -20,5 +22,7 @@ resource "aws_iam_role" "accesstocluster" {
   tags = {
     Name     = "${var.vpc_name}-eks"
     "Env_type" = "${var.env_type}"
+    "Terraform" = "true" 
   }
 }
+

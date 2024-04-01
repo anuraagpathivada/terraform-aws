@@ -26,24 +26,6 @@ variable "public_subnets" {
 }
 
 
-# EC2
-
-variable "ec2_image" {
-  type = string
-}
-variable "ec2_instance_type" {
-  type = string
-}
-variable "bastionopenssh" {
-  type = string
-}
-variable "git_username" {
-  type = string
-}
-variable "git_password" {
-  type = string
-}
-
 # Certificates
 
 variable "certificate_arn" {
@@ -61,3 +43,8 @@ variable "domain_name" {
 variable "eks_user_for_access" {
   type = string
 }
+
+variable "eks_as_policydocument" {
+  type = string
+}
+

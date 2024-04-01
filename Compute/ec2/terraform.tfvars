@@ -17,12 +17,12 @@ ec2_image = "ami-026255a2746f88074" #(amazon-linux2)
 ec2_instance_type = "t2.micro"
 bastionopenssh = "bastionopenssh.pem"
 git_username = "anuraagpathivada"
-git_password = ""
+git_password = "Chris@2026!"
 
 # Certificates
 
-certificate_arn = ""
+certificate_arn = "" # user your certificate ARN that you want to use for SSL Termination
 
 # Route 53
 
-domain_name = "a2suite.co.uk"
+domain_name = "" # Use the domain name that you want to use 
