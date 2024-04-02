@@ -14,7 +14,7 @@ public_subnets = ["10.148.3.0/24","10.148.4.0/24"]
 
 # Certificates
 
-certificate_arn = "" # user your certificate ARN that you want to use for SSL Termination
+certificate_arn = "" # Use your certificate ARN that you want to use for SSL Termination
 
 # Route 53
 

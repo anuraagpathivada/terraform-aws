@@ -21,7 +21,7 @@ git_password = "Chris@2026!"
 
 # Certificates
 
-certificate_arn = "" # user your certificate ARN that you want to use for SSL Termination
+certificate_arn = "" # Use your certificate ARN that you want to use for SSL Termination
 
 # Route 53
 
