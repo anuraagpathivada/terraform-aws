@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from aws_wsgi import make_lambda_handler
+import awsgi
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +18,8 @@ def health():
     return jsonify(status='UP')
 
 # When Deploying into a Serverless (Lambda)
-lambda_handler = make_lambda_handler(app)
+def lambda_handler(event, context):
+    return awsgi.response(app, event, context)
 
 # When wanting to deploy as a traditional webserver
 if __name__ == '__main__':

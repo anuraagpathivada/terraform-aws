@@ -42,10 +42,15 @@ resource "aws_s3_bucket_policy" "webapp" {
     Statement = [{
       Effect    = "Allow",
       Principal = {
-        AWS = "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${aws_cloudfront_origin_access_identity.oai.id}"
+        Service = "cloudfront.amazonaws.com"
       },
       Action   = "s3:GetObject",
-      Resource = "arn:aws:s3:::${aws_s3_bucket.webapp.id}/*"
+      Resource = "arn:aws:s3:::${aws_s3_bucket.webapp.id}/*",
+      Condition = {
+        StringEquals = {
+          "aws:SourceArn" = "${aws_cloudfront_distribution.s3_distribution.arn}"
+        }
+      }
     }]
   })
 }

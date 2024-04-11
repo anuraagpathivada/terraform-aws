@@ -12,7 +12,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     origin_id   = "PracticeS3Origin"
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_control.oac.id
     }
   }
 
@@ -54,6 +54,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = "OAI for webapp S3 bucket"
+
+resource "aws_cloudfront_origin_access_control" "oac" {
+  name                              = "${var.bucket_name}"
+  description                       = "${var.bucket_name}-for secure access"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
