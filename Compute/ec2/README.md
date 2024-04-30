@@ -10,7 +10,7 @@ This Terraform configuration automates the setup of a secure and scalable infras
 * Utilizes the terraform-aws-modules/vpc/aws module to create a Virtual Private Cloud (VPC) with specified parameters such as name, CIDR block, availability zones, and subnets.
 * Tags the resources with environment type.
 
-***EC2 Configuration: ***
+***EC2 Configuration:***
 * Sets up security groups to allow SSH traffic to and from the EC2 instances.
 * Creates security groups to allow internet traffic to ALB, backend, and frontend instances.
 * Configures security group rules for ingress and egress traffic.
@@ -19,7 +19,7 @@ This Terraform configuration automates the setup of a secure and scalable infras
 * Sets up launch templates for the web application and backend instances, including user data scripts for installing dependencies, cloning repositories, and configuring the applications.
 * Configures autoscaling groups for both web application and backend instances.
 
-***Application Load Balancer (ALB): ***Creates an ALB to distribute incoming application traffic.
+***Application Load Balancer (ALB):*** Creates an ALB to distribute incoming application traffic.
 * Sets up target groups for the web application and backend.
 * Configures listeners and listener rules to route traffic between the ALB and target groups.
 * Redirects HTTP traffic to HTTPS for security.
