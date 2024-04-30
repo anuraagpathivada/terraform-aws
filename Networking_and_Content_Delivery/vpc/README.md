@@ -1,6 +1,8 @@
 # Terraform AWS VPC Setup 🌐
 
-Set up a simple AWS VPC environment with Terraform. This repository provides all the necessary scripts to get your VPC, along with associated resources like subnets, gateways, and route tables, up and running.
+This repository provides all the necessary scripts to get your VPC, along with associated resources like subnets, gateways, and route tables, up and running.
+
+Though there is a module directly available to create the same, creating the resources in this method helps understand the resources and their respective configurations values more clearly.
 
 ## 📝 Table of Contents
 
@@ -17,12 +19,14 @@ Set up a simple AWS VPC environment with Terraform. This repository provides all
 
 ## 🚀 Getting Started
 
-### 1️⃣ Clone the Repository:
+### 1️⃣ Clone the Repository and update the variables in the terraform.tfvars file:
 
 ```bash
 git clone anuraagpathivada/terraform-aws
-cd anuraagpathivada/terraform-aws
+cd anuraagpathivada/terraform-aws/Networking_and_Content_Delivery/vpc
 ```
+
+***Update all the necessary values in the terraform.tfvars file before proceeding to the next step.***
 
 ### 2️⃣ Initialize Terraform:
 
@@ -62,11 +66,7 @@ terraform destroy
 
 Contributions, issues, and feature requests are welcome! Feel free to check [issues page](#). PRs are accepted. For major changes, please open an issue first to discuss what you'd like to change.
 
-## 👨‍💻 Authors
+## References 
 
-- **Anuraag Pathivada** - Initial work - [GitHub](https://github.com/anuraagpathivada)
+- **[Terraform AWS Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)**
 
-## 🎉 Acknowledgments
-
-- Terraform Documentation
-- AWS Documentation

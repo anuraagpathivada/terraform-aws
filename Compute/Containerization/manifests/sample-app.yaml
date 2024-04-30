@@ -73,11 +73,11 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/target-type: "ip"
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-south-1:023408401842:certificate/cb029a63-c5af-4d5e-b2bc-6bce0923f9ef"
+    alb.ingress.kubernetes.io/certificate-arn: "" # Certificate ARN
 spec:
   ingressClassName: "alb"
   rules:
-  - host: sampleapp.a2suite.co.uk
+  - host: samplewebapp.co.uk # Domian Name
     http:
       paths:
       - path: /
