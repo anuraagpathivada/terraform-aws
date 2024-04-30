@@ -4,14 +4,6 @@ This repository provides all the necessary scripts to get your VPC, along with a
 
 Though there is a module directly available to create the same, creating the resources in this method helps understand the resources and their respective configurations values more clearly.
 
-## 📝 Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-
 ## ⚙️ Prerequisites
 
 - **[Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)**: Infrastructure as Code Tool.

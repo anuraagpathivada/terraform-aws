@@ -28,14 +28,6 @@ This Terraform configuration automates the setup of a secure and scalable infras
 * Retrieves the Route 53 hosted zone ID based on the specified domain name.
 * Creates Route 53 records to route traffic from the domain name to the ALB's DNS name.
 
-## 📝 Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-
 ## ⚙️ Prerequisites
 
 - **[Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)**: Infrastructure as Code Tool.

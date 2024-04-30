@@ -12,14 +12,6 @@ AWS Elastic Beanstalk is a Platform as a Service (PaaS) offering from Amazon Web
 
 ***Route 53 Record:*** A Route 53 DNS record is created to map the Elastic Beanstalk environment's URL to a domain name. This allows users to access the deployed application using a custom domain name.
 
-## 📝 Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-
 ## ⚙️ Prerequisites
 
 - **[Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)**: Infrastructure as Code Tool.

@@ -233,7 +233,7 @@ resource "kubectl_manifest" "karpenter_manage_clusterrolebinding" {
       name: karpenter-manage
     subjects:
     - kind: User
-      name: "arn:aws:iam::023408401842:user/Anuraag"
+      name: "arn:aws:iam::<AWS Account ID>:user/Anuraag"
       apiGroup: rbac.authorization.k8s.io
   YAML
 

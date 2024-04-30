@@ -15,14 +15,6 @@ Global Variables: Global variables such as region, ACM certificate ARN, domain n
 
 ***Route 53 Record:*** A Route 53 DNS record is created to map the CloudFront distribution's domain name to a custom domain name, allowing users to access the content via a user-friendly URL.
 
-## 📝 Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-
 ## ⚙️ Prerequisites
 
 - **[Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)**: Infrastructure as Code Tool.

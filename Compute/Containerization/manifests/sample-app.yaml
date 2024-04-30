@@ -13,7 +13,7 @@ spec:
         app: react-app
     spec:
       nodeSelector:
-        eks.amazonaws.com/nodegroup: frontend-20240401151539301400000019
+        eks.amazonaws.com/nodegroup: frontend-20240401151539301400000019 # make sure to chnage this according to what is created 
       containers:
       - name: react-app
         image: anurapa/react-app:v1.0
@@ -35,7 +35,7 @@ spec:
         app: flask-app
     spec:
       nodeSelector:
-        eks.amazonaws.com/nodegroup: backend-20240401151539301300000017
+        eks.amazonaws.com/nodegroup: backend-20240401151539301300000017 # make sure to chnage this according to what is created 
       containers:
       - name: flask-app
         image: anurapa/flask-app:v1.0
