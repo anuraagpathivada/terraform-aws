@@ -20,8 +20,8 @@ app_version_label = "sample-demo-backend-version-x"
 
 # Certificates
 
-certificate_arn = "arn:aws:acm:ap-south-1:023408401842:certificate/cb029a63-c5af-4d5e-b2bc-6bce0923f9ef" # Use your certificate ARN that you want to use for SSL Termination
+certificate_arn = "" # Use your certificate ARN that you want to use for SSL Termination
 
 # Route 53
 
-domain_name = "a2suite.co.uk" # Use the domain name that you want to use 
+domain_name = "" # Use the domain name that you want to use 

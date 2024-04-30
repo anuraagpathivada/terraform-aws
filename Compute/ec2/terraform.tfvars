@@ -17,7 +17,7 @@ ec2_image = "ami-026255a2746f88074" #(amazon-linux2)
 ec2_instance_type = "t2.micro"
 bastionopenssh = "bastionopenssh.pem"
 git_username = "anuraagpathivada"
-git_password = "Chris@2026!"
+git_password = ""
 
 # Certificates
 
