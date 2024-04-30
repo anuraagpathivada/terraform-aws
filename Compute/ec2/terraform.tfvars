@@ -15,7 +15,7 @@ public_subnets = ["10.148.3.0/24","10.148.4.0/24"]
 
 ec2_image = "ami-026255a2746f88074" #(amazon-linux2)
 ec2_instance_type = "t2.micro"
-bastionopenssh = "bastionopenssh.pem"
+bastionopenssh = "bastionopenssh.pem" # create your own rsa public and private key pair and then save the pem file in the same directory
 git_username = "anuraagpathivada"
 git_password = ""
 

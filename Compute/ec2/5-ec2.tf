@@ -1,7 +1,7 @@
 
 resource "aws_key_pair" "bastionpublickey" {
   key_name   = "${var.vpc_name}-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaCr/qNpj2oER4x+eV2M+/OUwp+qreJrGyEhlKukr5YMSDp53MSwzTnZuLkciXFwI+T0LECw1qZl/HX5bOG+tBuVotdLaYI334lp/kO6KVOOPMojuixQgXm5ZGHq4b5OxR5x+axjxTsi+eB8AaIGBxCrZUa0YJK9RzcxV5fvYmoqyeiraEbCjJBbAyOMetz6SrsvWgg99AtLgC8JhQUlHvf3rqCSu10GZHAPKJOUsYARNX0/2BTFukR3MBbKHhvzZN55t8Mp5A2FXuIrR8ioUB3DSJrBcCQ8MCPGq3hfoWCtTpc1fwKckfOz3fiOYfwA9PX/Qyhw9C6E0S4nvPWVbN"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaCr/qNpj2oER4x+eV2M+/OUwp+qreJrGyEhlKukr5YMSDp53MSwzTnZuLkciXFwI+T0LECw1qZl/HX5bOG+tBuVotdLaYI334lp/kO6KVOOPMojuixQgXm5ZGHq4b5OxR5x+axjxTsi+eB8AaIGBxCrZUa0YJK9RzcxV5fvYmoqyeiraEbCjJBbAyOMetz6SrsvWgg99AtLgC8JhQUlHvf3rqCSu10GZHAPKJOUsYARNX0/2BTFukR3MBbKHhvzZN55t8Mp5A2FXuIrR8ioUB3DSJrBcCQ8MCPGq3hfoWCtTpc1fwKckfOz3fiOYfwA9PX/Qyhw9C6E0S4nvPWVbN"  #update the value of public key
 }
 
 # Create EC2 bastion
@@ -238,17 +238,6 @@ resource "aws_lb_target_group" "tg_backend" {
   }
 }
 
-# Listener for the ALB: Forward traffic to the React Frontend Target Group by default#
-#resource "aws_lb_listener" "front_listener" {
-#  load_balancer_arn = aws_lb.app_alb.arn
-#  port              = 80
-#  protocol          = "HTTP"
-#  default_action {
-#    type             = "forward"
-#    target_group_arn = aws_lb_target_group.tg_webapp.arn
-#  }
-#}
-
 # Listener for the ALB: Forward traffic to the React Frontend Target Group by default
 
 resource "aws_lb_listener" "https_front_listener" {
@@ -299,20 +288,3 @@ resource "aws_lb_listener" "http_redirect_listener" {
     }
   }
 }
-
-
-
-# Listener Rule for routing /api requests to the Flask Backend
-#resource "aws_lb_listener_rule" "api_routing" {
-#  listener_arn = aws_lb_listener.front_listener.arn
-#  priority     = 100
-#  action {
-#    type             = "forward"
-#    target_group_arn = aws_lb_target_group.tg_backend.arn
-#  }
-#  condition {
-#    path_pattern {
-#      values = ["/api/*"]
-#    }
-#  }
-#}
